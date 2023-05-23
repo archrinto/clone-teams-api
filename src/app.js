@@ -1,0 +1,64 @@
+import express from 'express';
+import * as dotenv from 'dotenv';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import bodyParser from 'body-parser';
+import http from 'http';
+
+import * as p from './passport.js';
+
+import users from './users/index.js';
+import chats from './chats/index.js';
+import socket from './socket.js';
+
+dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
+const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/dev_clone_teams';
+
+app.use(cors({
+    origin: '*'
+}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use('/v1/users', users);
+app.use('/v1/chats', chats);
+
+app.use(function(req, res, next) {
+    return res.status(404).json({ 
+        success: false,
+        message: 'Route ' + req.url + ' Not found.',
+        data: {}
+    });
+});
+
+app.use(function(err, req, res, next) {
+    return res.status(500).json({ 
+        success: false,
+        message: 'Something is wrong',
+        data: {}
+    });
+});
+
+// http
+const server = http.createServer(app);
+// socket
+app.io = socket(server);
+
+const start = async () => {
+    try {
+        await mongoose.connect(mongoURI);
+
+        server.listen(port, () => {
+            console.log(`App listening on port ${port}`)
+        })
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
+    }
+};
+  
+start();
+
