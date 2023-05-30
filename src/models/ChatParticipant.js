@@ -3,17 +3,17 @@ import timestampOptions from "./utils/timestampOptions.js";
 
 export const ChatParticipantSchema = Schema(
     {
-        chat: {
+        chatId: {
             type: Schema.Types.ObjectId,
             default: null,
             ref: 'Chat'
         },
-        user: {
+        userId: {
             type: Schema.Types.ObjectId,
             default: null,
             ref: 'User'
         },
-        is_admin: {
+        isAdmin: {
             type: Boolean,
             default: false
         }

@@ -1,11 +1,10 @@
 import bcrypt from 'bcrypt';
 import User from "../../models/User.js";
-import Response from '../../Response.js';
+import Response from "../../utils/Response.js";
 
 export default async (req, res) => {
     const user = await User.create({
-        first_name: req.body.first_name,
-        last_name: req.body.last_name,
+        name: req.body.name,
         email: req.body.email,
         password: await bcrypt.hash(req.body.password, 15)
     });

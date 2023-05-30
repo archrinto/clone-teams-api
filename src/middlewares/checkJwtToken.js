@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import config from "../config.js";
-import Response from '../Response.js';
+import Response from '../utils/Response.js';
 
 export const validateToken = (token) => {
     try {

@@ -4,11 +4,7 @@ import bcrypt from 'bcrypt';
 
 export const UserSchema = Schema(
     {
-        first_name: {
-            type: String,
-            default: null,
-        },
-        last_name: {
+        name: {
             type: String,
             default: null,
         },
@@ -20,7 +16,7 @@ export const UserSchema = Schema(
             type: String,
             default: null,
         },
-        profile_status: {
+        profileStatus: {
             type: String,
             default: null,
         },

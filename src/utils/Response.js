@@ -23,7 +23,7 @@ export default {
         });
     },
 
-    badRequest(res, data={}, message="Forbidden") {
+    forbidden(res, data={}, message="Forbidden") {
         return res.status(403).json({
             success: false,
             message,
@@ -47,4 +47,12 @@ export default {
             data
         });
     },
+
+    confict(res, data={}, message="Conflict") {
+        return res.status(409).json({
+            success: false,
+            message,
+            data
+        })
+    }
 }

@@ -1,4 +1,4 @@
-import Response from "../../Response.js";
+import Response from "../../utils/Response.js";
 import ChatMessage from "../../models/ChatMessage.js"
 import ChatParticipant from "../../models/ChatParticipant.js";
 import EventType from "../../models/enums/EventType.js";

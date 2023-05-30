@@ -1,4 +1,4 @@
-import Response from "../../Response.js";
+import Response from "../../utils/Response.js";
 import User from "../../models/User.js";
 
 export default async (req, res) => {

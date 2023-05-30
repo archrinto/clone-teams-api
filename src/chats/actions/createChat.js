@@ -1,31 +1,72 @@
-import Response from "../../Response.js";
+import Response from "../../utils/Response.js";
 import Chat from "../../models/Chat.js"
 import ChatParticipant from "../../models/ChatParticipant.js";
+import User from "../../models/User.js";
 import ChatType from "../../models/enums/ChatType.js"
+import EventType from "../../models/enums/EventType.js";
 
 export default async (req, res) => {
-    const chat = await Chat.create({
-        owner: req.user?.id,
-        name: req.body?.name || null,
-        type: req.body?.type || ChatType.single,
-        avatar: req.body?.avatar || null
-    });
+    // add current user as participant
+    req.body?.participants?.push(req.user.id);
 
-    const participants = req.body?.participants?.map((item) => { return { user: item, chat: chat._id } }) || [];
-
-    if (participants.length > 0) {
-        participants.push({
-            user: req.user?.id,
-            chat: chat._id,
-            is_admin: true
+    // need check if the user already have a chat with the participant
+    if (!req.body?.type || req.body?.type == ChatType.single) {
+        const chat = await Chat.findOne({
+            type: ChatType.single,
+            'participants._id': {
+                '$all': [...req.body?.participants],
+            }
         });
+
+        if (chat) {
+            return Response.success(res, chat);
+        }
     }
 
-    const added = await ChatParticipant.insertMany(participants);
-    const addedIds = added?.map((item) => item._id) || [];
+    // load user of the participants
+    const users = await User.find({ _id: { '$in': req.body?.participants }});
 
-    chat.participants = addedIds;
-    await chat.save();
+    // map users into embedded document format
+    // only get 10 of them to reduce document size
+    const participants = users.slice(0, 10).map(item => {
+        return { 
+            _id: item._id, 
+            name: item.name, 
+            avatar: item.avatar 
+        };
+    }) || [];
 
-    return Response.success(res, chat);
+    // crate new chat
+    const newchat = await Chat.create({
+        ownerId: req.user?.id,
+        name: req.body?.name || null,
+        type: req.body?.type || ChatType.single,
+        avatar: req.body?.avatar || null,
+        participantCount: participants.length,
+        participants: participants
+    });
+
+    // save all relation for chat and users
+    const chatParticipants = users.map(item => {
+        return {
+            userId: item._id,
+            chatId: newchat._id
+        }
+    });
+    ChatParticipant.insertMany(chatParticipants);
+
+
+    // remove current user from participant list
+    const isCurrentUser = (item) => item._id?.toString() == req.user.id
+    const indexOfCurrentUser = newchat.participants.findIndex(isCurrentUser);
+    
+    newchat.participants.splice(indexOfCurrentUser, 1);
+
+    // send event
+    for (let i = 0; i < chatParticipants.length; i++) {
+        const roomId = chatParticipants[i].userId.toString();
+        req.app?.io.to(roomId).emit(EventType.NEW_CHAT, newchat);
+    }
+
+    return Response.success(res, newchat);
 }

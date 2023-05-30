@@ -2,18 +2,31 @@ import mongoose, { Schema, model } from "mongoose";
 import timestampOptions from "./utils/timestampOptions.js";
 import MessageType from "./enums/MessageType.js";
 
+const ChatEmbeddedSchema = { 
+    _id: Schema.Types.ObjectId, 
+}
+
 export const ChatMessageSchema = Schema(
     {
         chat: {
-            type: Schema.Types.ObjectId,
-            ref: 'Chat',
+            type: ChatEmbeddedSchema,
             default: null
         },
         sender: {
-            type: Schema.Types.ObjectId,
-            ref: 'User'
+            type: { 
+                _id: Schema.Types.ObjectId, 
+                name: {
+                    type: String,
+                    default: null
+                },
+                avatar: {
+                    type: String,
+                    default: null
+                }
+            },
+
         },
-        type: {
+        messageType: {
             type: String,
             default: MessageType.text
         },
@@ -21,11 +34,11 @@ export const ChatMessageSchema = Schema(
             type: String,
             default: null
         },
-        is_pinned: {
+        isPinned: {
             type: Boolean,
             default: false
         },
-        is_edited: {
+        isEdited: {
             type: Boolean,
             default: false
         }

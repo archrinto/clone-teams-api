@@ -2,7 +2,7 @@ import passport from "passport"
 import jwt from 'jsonwebtoken';
 
 import config from "../../config.js";
-import Response from "../../Response.js";
+import Response from "../../utils/Response.js";
 import User from "../../models/User.js";
 
 export default async (req, res) => {
@@ -15,8 +15,7 @@ export default async (req, res) => {
     
     const token = jwt.sign({
         id: user._id,
-        first_name: user.first_name,
-        last_name: user.last_name, 
+        name: user.name,
         email: user.email,
     }, config.jwt_secret);
 
