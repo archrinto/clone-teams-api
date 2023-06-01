@@ -6,6 +6,38 @@ const ChatEmbeddedSchema = {
     _id: Schema.Types.ObjectId, 
 }
 
+const SenderEmbeddedShcema = {
+    _id: Schema.Types.ObjectId, 
+    name: {
+        type: String,
+        default: null
+    },
+    avatar: {
+        type: String,
+        default: null
+    }
+}
+
+const MessageReplySchema = {
+    _id: Schema.Types.ObjectId, 
+    sender: {
+        type: SenderEmbeddedShcema
+    },
+    messageType: {
+        type: String,
+        default: MessageType.text
+    },
+    content: {
+        type: String,
+        default: null
+    },
+    createdAt: {
+        type: Date,
+        default: null,
+    }
+}
+
+
 export const ChatMessageSchema = Schema(
     {
         chat: {
@@ -13,18 +45,7 @@ export const ChatMessageSchema = Schema(
             default: null
         },
         sender: {
-            type: { 
-                _id: Schema.Types.ObjectId, 
-                name: {
-                    type: String,
-                    default: null
-                },
-                avatar: {
-                    type: String,
-                    default: null
-                }
-            },
-
+            type: SenderEmbeddedShcema,
         },
         messageType: {
             type: String,
@@ -34,13 +55,13 @@ export const ChatMessageSchema = Schema(
             type: String,
             default: null
         },
-        isPinned: {
-            type: Boolean,
-            default: false
-        },
         isEdited: {
             type: Boolean,
             default: false
+        },
+        replyTo: {
+            type: MessageReplySchema,
+            default: null
         }
     }, 
     {

@@ -15,7 +15,8 @@ export default async (req, res) => {
             _id: req.user?.id || null,
             name: req.user?.name || null,
             avatar: req.user?.avatar || null,
-        }
+        },
+        replyTo: req.body?.replyTo || null
     });
 
     const updated = await Chat.updateOne({ _id: req.params.chatId }, { messages: [message]})
