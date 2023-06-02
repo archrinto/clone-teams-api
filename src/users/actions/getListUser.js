@@ -11,7 +11,11 @@ export default async (req, res) => {
             { name: search },
             { email: search },
         ];
-    }   
+    }
+
+    if (req.query?.except && Array.isArray(req.query.except)) {
+        filters['_id'] = { '$nin': req.query.except }
+    }
     
     const users = await User.find(filters).limit(limit);
 

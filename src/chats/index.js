@@ -16,7 +16,8 @@ router.post('/', checkJwtToken, createChat);
 router.get('/', checkJwtToken, getListChat);
 router.get('/:chatId/messages', checkJwtToken, getListMessage);
 router.post('/:chatId/messages', checkJwtToken, addChatMessage);
-router.get('/:chatId/participants', getListParticipant);
+router.get('/:chatId/participants', checkJwtToken, getListParticipant);
+router.post('/:chatId/participants', checkJwtToken, addParticipant);
 router.get('/:chatId', checkJwtToken, getOneChat);
 
 export default router;

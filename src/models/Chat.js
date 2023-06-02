@@ -56,7 +56,7 @@ export const ChatSchema = Schema(
             type: String,
             default: null
         },
-        type: {
+        chatType: {
             type: String,
             default: ChatType.single
         },

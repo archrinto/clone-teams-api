@@ -12,7 +12,7 @@ export default async (req, res) => {
     // need check if the user already have a chat with the participant
     if (!req.body?.type || req.body?.type == ChatType.single) {
         const chat = await Chat.findOne({
-            type: ChatType.single,
+            chatType: ChatType.single,
             'participants._id': {
                 '$all': [...req.body?.participants],
             }
@@ -40,7 +40,7 @@ export default async (req, res) => {
     const newchat = await Chat.create({
         ownerId: req.user?.id,
         name: req.body?.name || null,
-        type: req.body?.type || ChatType.single,
+        chatType: req.body?.type || ChatType.single,
         avatar: req.body?.avatar || null,
         participantCount: participants.length,
         participants: participants
