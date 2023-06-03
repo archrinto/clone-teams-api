@@ -8,6 +8,7 @@ import getListParticipant from './actions/getListParticipant.js';
 import checkJwtToken from '../middlewares/checkJwtToken.js';
 import addChatMessage from './actions/addChatMessage.js';
 import getOneChat from './actions/getOneChat.js';
+import updateChat from './actions/updateChat.js';
 
 const router = express.Router(); 
 
@@ -19,5 +20,6 @@ router.post('/:chatId/messages', checkJwtToken, addChatMessage);
 router.get('/:chatId/participants', checkJwtToken, getListParticipant);
 router.post('/:chatId/participants', checkJwtToken, addParticipant);
 router.get('/:chatId', checkJwtToken, getOneChat);
+router.put('/:chatId', checkJwtToken, updateChat);
 
 export default router;
