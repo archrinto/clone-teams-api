@@ -14,7 +14,7 @@ import socket from './socket.js';
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 9000;
 const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/dev_clone_teams';
 
 app.use(cors({
