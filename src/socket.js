@@ -27,16 +27,38 @@ export default (server) => {
             console.log('client disconnected');
         });
         
-        socket.on('join-meeting', (roomId) => {
+        socket.on('join-meeting', ({ roomId }) => {
             console.log('user join a meeting', roomId, socket.userId);
             socket.join(roomId);
-            socket.to(roomId).emit('user-joined-meeting', socket.userId);
+            socket.to(roomId).emit('user-join-meeting', {
+                userId: socket.userId
+            });
         });
 
-        socket.on('leave-meeting', (roomId) => {
-            socket.to(roomId).emit('user-leave-meeting', socket.userId);
+        socket.on('leave-meeting', ({ roomId }) => {
+            console.log('user leave a meeting', roomId, socket.userId)
+            socket.to(roomId).emit('user-leave-meeting', {
+                userId: socket.userId
+            });
             socket.leave(roomId);
         });
+
+        socket.on('send-peer-signal', ({ roomId, signal }) => {
+            console.log('user send peer signal', roomId, socket.userId);
+            socket.to(roomId).emit('user-send-peer-signal', {
+                userId: socket.userId,
+                signal: signal
+            })
+        });
+
+        socket.on('return-peer-signal', ({ roomId, signal }) => {
+            console.log('user return peer signal', roomId, socket.userId);
+            socket.to(roomId).emit('user-return-peer-signal', {
+                userId: socket.userId,
+                signal: signal
+            })
+        })
+
     });
 
     return io;
