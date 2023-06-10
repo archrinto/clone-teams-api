@@ -9,31 +9,14 @@ import users from './users/index.js';
 import chats from './chats/index.js';
 import socket from './socket.js';
 
-dotenv.config({ path: path.join(__dirname, '.env') });
-
-console.log(path.join(__dirname, '.env'));
+dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 9000;
 const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/dev_clone_teams';
 
 
-const whitelist = [
-    'http://localhost:5000', 
-    'https://cloneteams.kena.li'
-];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
-
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 

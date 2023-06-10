@@ -15,11 +15,12 @@ export default {
         });
     },
 
-    badRequest(res, data={}, message="Bad request") {
+    badRequest(res, data={}, message="Bad request", additionals = {}) {
         return res.status(400).json({
             success: false,
             message,
-            data
+            data,
+            ...additionals
         });
     },
 
