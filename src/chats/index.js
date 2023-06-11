@@ -9,17 +9,20 @@ import checkJwtToken from '../middlewares/checkJwtToken.js';
 import addChatMessage from './actions/addChatMessage.js';
 import getOneChat from './actions/getOneChat.js';
 import updateChat from './actions/updateChat.js';
+import addChatMessageValidation from './validators/addChatMessageValidation.js';
+import addParticipantValidation from './validators/addParticipantValidation.js';
+import createChatValidation from './validators/createChatValidation.js';
+import updateChatValidation from './validators/updateChatValidation.js';
 
 const router = express.Router(); 
 
-router.post('/:chatId/participants', addParticipant);
-router.post('/', checkJwtToken, createChat);
+router.post('/', checkJwtToken, createChatValidation, createChat);
 router.get('/', checkJwtToken, getListChat);
 router.get('/:chatId/messages', checkJwtToken, getListMessage);
-router.post('/:chatId/messages', checkJwtToken, addChatMessage);
+router.post('/:chatId/messages', checkJwtToken, addChatMessageValidation, addChatMessage);
 router.get('/:chatId/participants', checkJwtToken, getListParticipant);
-router.post('/:chatId/participants', checkJwtToken, addParticipant);
+router.post('/:chatId/participants', checkJwtToken, addParticipantValidation, addParticipant);
 router.get('/:chatId', checkJwtToken, getOneChat);
-router.put('/:chatId', checkJwtToken, updateChat);
+router.put('/:chatId', checkJwtToken, updateChatValidation, updateChat);
 
 export default router;

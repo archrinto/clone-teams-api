@@ -9,14 +9,15 @@ import getListUser from './actions/getListUser.js';
 import updateStatus from './actions/updateStatus.js';
 import registerValidation from './validations/registerValidation.js';
 import loginValidation from './validations/loginValidation.js';
+import updateProfileValidation from './validations/updateProfileValidation.js';
 
 const router = express.Router(); 
 
 router.post('/signup', registerValidation, signupAction);
 router.post('/signin', loginValidation, signinAction);
-router.put('/me', checkJwtToken, updateProfileAction);
+router.put('/me', checkJwtToken, updateProfileValidation, updateProfileAction);
 router.get('/me', checkJwtToken, getProfileAction);
-router.put('/me/status', checkJwtToken, updateStatus);
+router.put('/me/status', checkJwtToken, updateStatus, updateStatus);
 router.get('/', checkJwtToken, getListUser);
 
 export default router;

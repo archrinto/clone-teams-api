@@ -10,7 +10,7 @@ export default async (req, res) => {
     req.body?.participants?.push(req.user.id);
 
     // need check if the user already have a chat with the participant
-    if (!req.body?.type || req.body?.type == ChatType.single) {
+    if (!req.body?.chatType || req.body?.chatType == ChatType.single) {
         const chat = await Chat.findOne({
             chatType: ChatType.single,
             'participants._id': {
@@ -26,6 +26,8 @@ export default async (req, res) => {
     // load user of the participants
     const users = await User.find({ _id: { '$in': req.body?.participants }});
 
+    if (users.length < 2) return Response.badRequest(res, {}, "Invalid Participant");
+
     // map users into embedded document format
     // only get 10 of them to reduce document size
     const participants = users.slice(0, 10).map(item => {
@@ -40,7 +42,7 @@ export default async (req, res) => {
     const newchat = await Chat.create({
         ownerId: req.user?.id,
         name: req.body?.name || null,
-        chatType: req.body?.type || ChatType.single,
+        chatType: req.body?.chatType || ChatType.single,
         avatar: req.body?.avatar || null,
         participantCount: participants.length,
         participants: participants

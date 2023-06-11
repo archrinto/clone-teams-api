@@ -5,22 +5,29 @@ import ChatParticipant from "../../models/ChatParticipant.js";
 import EventType from "../../models/enums/EventType.js";
 
 export default async (req, res) => {
+    let replyTo = null;
+    
+    if (req.body?.replyTo?._id) {
+        replyTo = await ChatMessage.findOne({
+            _id: req.body.replyTo._id,
+        });
+    }
+
     const message = await ChatMessage.create({
         chat: {
             _id: req.params.chatId,
         },
         content: req.body?.content,
-        messageType: req.body?.type,
+        messageType: req.body?.messageType,
         sender: {
             _id: req.user?.id || null,
             name: req.user?.name || null,
             avatar: req.user?.avatar || null,
         },
-        replyTo: req.body?.replyTo || null
+        replyTo: replyTo
     });
 
     const updated = await Chat.updateOne({ _id: req.params.chatId }, { messages: [message]})
-    console.log(updated);
 
     // send to recipients
     const participants = await ChatParticipant.find({ chatId: req.params?.chatId });

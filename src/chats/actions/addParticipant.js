@@ -16,7 +16,7 @@ export default async (req, res) => {
     userRequested = userRequested.filter(item => !participantUsersIds.includes(item));
 
     if (userRequested.length === 0) {
-        return Response.badRequest(res, 'Invalid participants');
+        return Response.badRequest(res, {}, 'Invalid participants');
     }
 
     // prepare participant data
