@@ -57,18 +57,22 @@ export default async (req, res) => {
     });
     ChatParticipant.insertMany(chatParticipants);
 
-
-    // remove current user from participant list
-    const isCurrentUser = (item) => item._id?.toString() == req.user.id
-    const indexOfCurrentUser = newchat.participants.findIndex(isCurrentUser);
-    
-    newchat.participants.splice(indexOfCurrentUser, 1);
-
     // send event
     for (let i = 0; i < chatParticipants.length; i++) {
         const roomId = chatParticipants[i].userId.toString();
-        req.app?.io.to(roomId).emit(EventType.NEW_CHAT, newchat);
+        const participantNewChat = { ...newchat.toObject() }
+
+        // remove current participat user before sent it
+        const indexOfparticipant = participantNewChat.participants.findIndex(item => item._id.toString() === chatParticipants[i].userId.toString());
+        participantNewChat.participants.splice(indexOfparticipant, 1);
+
+        req.app?.io.to(roomId).emit(EventType.NEW_CHAT, participantNewChat);
     }
+    
+    // remove current user from participant list
+    const isCurrentUser = (item) => item._id?.toString() == req.user.id
+    const indexOfCurrentUser = newchat.participants.findIndex(isCurrentUser);
+    newchat.participants.splice(indexOfCurrentUser, 1);
 
     return Response.success(res, newchat);
 }
