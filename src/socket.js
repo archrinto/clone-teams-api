@@ -43,17 +43,17 @@ export default (server) => {
             socket.leave(roomId);
         });
 
-        socket.on('send-peer-signal', ({ roomId, signal }) => {
-            console.log('user send peer signal', roomId, socket.userId);
-            socket.to(roomId).emit('user-send-peer-signal', {
+        socket.on('send-peer-signal', ({ targetId, signal }) => {
+            console.log('user send peer signal to', targetId, 'from', socket.userId);
+            socket.to(targetId).emit('user-send-peer-signal', {
                 userId: socket.userId,
                 signal: signal
             })
         });
 
-        socket.on('return-peer-signal', ({ roomId, signal }) => {
-            console.log('user return peer signal', roomId, socket.userId);
-            socket.to(roomId).emit('user-return-peer-signal', {
+        socket.on('return-peer-signal', ({ targetId, signal }) => {
+            console.log('user return peer signal to', targetId, 'from', socket.userId);
+            socket.to(targetId).emit('user-return-peer-signal', {
                 userId: socket.userId,
                 signal: signal
             })

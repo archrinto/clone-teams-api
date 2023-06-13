@@ -8,11 +8,11 @@ export default async (req, res) => {
     // get list of chat ids 
     const chatIds = chatParticipated.map(item => item.chatId);
     // load the chats
-    const chats = await Chat.find({ _id: { '$in': chatIds }});
+    const chats = await Chat.find({ _id: { '$in': chatIds }}).sort({ updatedAt: -1 });
 
     // remove current user from participant list
     const isCurrentUser = (item) => item._id?.toString() == req.user.id
-    console.log(req.user.id);
+
     const chatList = chats.map(item => {
         const indexOfCurrentUser = item.participants.findIndex(isCurrentUser);
         item.participants.splice(indexOfCurrentUser, 1);
