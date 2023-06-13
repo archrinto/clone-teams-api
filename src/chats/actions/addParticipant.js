@@ -2,7 +2,9 @@ import Chat from "../../models/Chat.js"
 import ChatParticipant from "../../models/ChatParticipant.js";
 import User from "../../models/User.js";
 import ChatType from "../../models/enums/ChatType.js";
+import EventType from "../../models/enums/EventType.js";
 import Response from "../../utils/Response.js";
+import emitChatEventToParticipants from "../helpers/emitChatEventToParticipants.js";
 
 export default async (req, res) => {
     let userRequested = req.body?.participants || [];
@@ -48,6 +50,14 @@ export default async (req, res) => {
     }
 
     await chat.save();
+
+    emitChatEventToParticipants(req.app?.io, EventType.CHAT_UPDATED, chat, participants);
+    emitChatEventToParticipants(req.app?.io, EventType.CHAT_UPDATED, chat, chatParticipantsData);
+
+    // remove current user from participant list
+    const isCurrentUser = (item) => item._id?.toString() == req.user.id
+    const indexOfCurrentUser = chat.participants.findIndex(isCurrentUser);
+    chat.participants.splice(indexOfCurrentUser, 1);
 
     return Response.success(res, chat);
 }

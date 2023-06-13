@@ -33,7 +33,7 @@ export default async (req, res) => {
     const participants = await ChatParticipant.find({ chatId: req.params?.chatId });
     for (let i = 0; i < participants.length; i++) {
         const roomId = participants[i].userId.toString();
-        req.app?.io.to(roomId).emit(EventType.new_message, message);
+        req.app?.io.to(roomId).emit(EventType.NEW_MESSAGE, message);
     }
 
     return Response.success(res, message);

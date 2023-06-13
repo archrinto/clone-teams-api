@@ -4,6 +4,7 @@ import ChatParticipant from "../../models/ChatParticipant.js";
 import User from "../../models/User.js";
 import ChatType from "../../models/enums/ChatType.js"
 import EventType from "../../models/enums/EventType.js";
+import emitChatEventToParticipants from "../helpers/emitChatEventToParticipants.js";
 
 export default async (req, res) => {
     // add current user as participant
@@ -57,17 +58,8 @@ export default async (req, res) => {
     });
     ChatParticipant.insertMany(chatParticipants);
 
-    // send event
-    for (let i = 0; i < chatParticipants.length; i++) {
-        const roomId = chatParticipants[i].userId.toString();
-        const participantNewChat = { ...newchat.toObject() }
-
-        // remove current participat user before sent it
-        const indexOfparticipant = participantNewChat.participants.findIndex(item => item._id.toString() === chatParticipants[i].userId.toString());
-        participantNewChat.participants.splice(indexOfparticipant, 1);
-
-        req.app?.io.to(roomId).emit(EventType.NEW_CHAT, participantNewChat);
-    }
+    // send event to all participant
+    emitChatEventToParticipants(req.app?.io, EventType.NEW_CHAT, newchat, chatParticipants);
     
     // remove current user from participant list
     const isCurrentUser = (item) => item._id?.toString() == req.user.id
