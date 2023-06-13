@@ -8,7 +8,7 @@ export default (req, res, next) => {
         messageType: Joi.string().required().empty(''),
         replyTo: Joi.object({
             _id: Joi.string().required(),
-        })
+        }).empty(null)
     };
 
     const { error, value } = Joi.object(rules).validate(
