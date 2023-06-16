@@ -24,7 +24,7 @@ export default async (req, res) => {
     // prepare participant data
     const users = await User.find({ _id: { '$in': userRequested }});
     const userCount = users.length;
-    const chatParticipantsData = users.map(item => {
+    const newParticipantsData = users.map(item => {
         return {
             userId: item._id,
             chatId: chatId
@@ -32,7 +32,7 @@ export default async (req, res) => {
     });
 
     // save chat participants
-    await ChatParticipant.insertMany(chatParticipantsData);
+    await ChatParticipant.insertMany(newParticipantsData);
 
     // change participants count
     // add embedded participants
@@ -52,7 +52,7 @@ export default async (req, res) => {
     await chat.save();
 
     emitChatEventToParticipants(req.app?.io, EventType.CHAT_UPDATED, chat, participants);
-    emitChatEventToParticipants(req.app?.io, EventType.NEW_CHAT, chat, chatParticipantsData);
+    emitChatEventToParticipants(req.app?.io, EventType.NEW_CHAT, chat, newParticipantsData);
 
     // remove current user from participant list
     const isCurrentUser = (item) => item._id?.toString() == req.user.id
