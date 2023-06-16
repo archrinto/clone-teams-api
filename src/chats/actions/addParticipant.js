@@ -52,7 +52,7 @@ export default async (req, res) => {
     await chat.save();
 
     emitChatEventToParticipants(req.app?.io, EventType.CHAT_UPDATED, chat, participants);
-    emitChatEventToParticipants(req.app?.io, EventType.CHAT_UPDATED, chat, chatParticipantsData);
+    emitChatEventToParticipants(req.app?.io, EventType.NEW_CHAT, chat, chatParticipantsData);
 
     // remove current user from participant list
     const isCurrentUser = (item) => item._id?.toString() == req.user.id
