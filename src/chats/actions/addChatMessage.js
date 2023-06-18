@@ -27,7 +27,7 @@ export default async (req, res) => {
         replyTo: replyTo
     });
 
-    const updated = await Chat.updateOne({ _id: req.params.chatId }, { '$push': { messages: { '$each': [message], '$position': 0 }}});
+    const updated = await Chat.updateOne({ _id: req.params.chatId }, { messages: [message] });
 
     // send to recipients
     const participants = await ChatParticipant.find({ chatId: req.params?.chatId });
