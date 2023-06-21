@@ -82,6 +82,28 @@ export default (server) => {
             })
         })
 
+        socket.on('send-share-screen-peer-signal', ({ targetId, signal }) => {
+            console.log('user send peer signal to', targetId, 'from', socket.userId);
+            socket.to(targetId).emit('user-send-share-screen-peer-signal', {
+                userId: socket.userId,
+                signal: signal,
+                user: socket.user
+            })
+        });
+
+        socket.on('return-share-screen-peer-signal', ({ targetId, signal }) => {
+            console.log('user return peer signal to', targetId, 'from', socket.userId);
+            socket.to(targetId).emit('user-return-share-screen-peer-signal', {
+                userId: socket.userId,
+                signal: signal
+            })
+        })
+
+        socket.on('stop-share-screen', ({ roomId }) => {
+            console.log('stop share screen', roomId);
+            socket.to(roomId).emit('user-stop-share-screen');
+        })
+
         socket.on('media-state-change', ({ roomId, mediaState }) => {
             console.log('user media state change', roomId, socket.userId, mediaState);
             socket.to(roomId).emit('user-media-state-change', {
