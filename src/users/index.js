@@ -10,6 +10,7 @@ import updateStatus from './actions/updateStatus.js';
 import registerValidation from './validations/registerValidation.js';
 import loginValidation from './validations/loginValidation.js';
 import updateProfileValidation from './validations/updateProfileValidation.js';
+import getListRelatedUser from './actions/getListRelatedUser.js';
 
 const router = express.Router(); 
 
@@ -19,5 +20,6 @@ router.put('/me', checkJwtToken, updateProfileValidation, updateProfileAction);
 router.get('/me', checkJwtToken, getProfileAction);
 router.put('/me/status', checkJwtToken, updateStatus, updateStatus);
 router.get('/', checkJwtToken, getListUser);
+router.get('/related', checkJwtToken, getListRelatedUser);
 
 export default router;
