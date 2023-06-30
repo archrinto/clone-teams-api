@@ -13,6 +13,7 @@ import addChatMessageValidation from './validators/addChatMessageValidation.js';
 import addParticipantValidation from './validators/addParticipantValidation.js';
 import createChatValidation from './validators/createChatValidation.js';
 import updateChatValidation from './validators/updateChatValidation.js';
+import leaveChat from './actions/leaveChat.js';
 
 const router = express.Router(); 
 
@@ -24,5 +25,6 @@ router.get('/:chatId/participants', checkJwtToken, getListParticipant);
 router.post('/:chatId/participants', checkJwtToken, addParticipantValidation, addParticipant);
 router.get('/:chatId', checkJwtToken, getOneChat);
 router.put('/:chatId', checkJwtToken, updateChatValidation, updateChat);
+router.delete('/:chatId/leave', checkJwtToken, leaveChat);
 
 export default router;

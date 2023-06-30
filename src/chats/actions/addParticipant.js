@@ -27,7 +27,8 @@ export default async (req, res) => {
     const newParticipantsData = users.map(item => {
         return {
             userId: item._id,
-            chatId: chatId
+            chatId: chatId,
+            joinAt: new Date(),
         }
     });
 

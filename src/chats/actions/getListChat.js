@@ -1,10 +1,15 @@
 import Response from "../../utils/Response.js";
 import Chat from "../../models/Chat.js";
 import ChatParticipant from "../../models/ChatParticipant.js";
+import ParticipantStatus from "../../models/enums/ParticipantStatus.js";
 
 export default async (req, res) => {
     // load user participations
-    const chatParticipated = await ChatParticipant.find({ userId: req.user.id }, { chatId: 1});
+    const chatParticipated = await ChatParticipant.find(
+        { userId: req.user.id, '$or': [{ status: ParticipantStatus.ACTIVE }, { status: { '$exists': false }}] }, 
+        { chatId: 1}
+    );
+
     // get list of chat ids 
     const chatIds = chatParticipated.map(item => item.chatId);
     // load the chats

@@ -1,8 +1,6 @@
 import { Schema, model } from "mongoose";
 import timestampOptions from "./utils/timestampOptions.js";
 import ChatType from "./enums/ChatType.js";
-import { ChatParticipantSchema } from "./ChatParticipant.js";
-import { ChatMessageSchema } from "./ChatMessage.js";
 
 const ParticipantEmbeddedSchema = {
     _id: Schema.Types.ObjectId,
@@ -13,6 +11,10 @@ const ParticipantEmbeddedSchema = {
     avatar: {
         type: String,
         default: null
+    },
+    status: {
+        type: String,
+        default: 'active'
     }
 }
 
@@ -21,6 +23,9 @@ const MessageEmbeddedSchema = {
     messageType: {
         type: String,
         default: null
+    },
+    chat: {
+        _id: Schema.Types.ObjectId,
     },
     content: {
         type: String,

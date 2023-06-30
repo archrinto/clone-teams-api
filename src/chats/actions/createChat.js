@@ -53,7 +53,8 @@ export default async (req, res) => {
     const chatParticipants = users.map(item => {
         return {
             userId: item._id,
-            chatId: newchat._id
+            chatId: newchat._id,
+            joinAt: new Date()
         }
     });
     ChatParticipant.insertMany(chatParticipants);

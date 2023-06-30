@@ -16,6 +16,18 @@ export const ChatParticipantSchema = Schema(
         isAdmin: {
             type: Boolean,
             default: false
+        },
+        status: {
+            type: String,
+            default: 'active'
+        },
+        joinAt: {
+            type: Date,
+            default: null,
+        },
+        leaveAt: {
+            type: Date,
+            default: null,
         }
     },
     {
