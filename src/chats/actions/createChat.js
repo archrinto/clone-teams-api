@@ -20,6 +20,11 @@ export default async (req, res) => {
         });
 
         if (chat) {
+            // remove current user from participant list
+            const isCurrentUser = (item) => item._id?.toString() === req.user.id;
+            const indexOfCurrentUser = chat.participants.findIndex(isCurrentUser);
+            chat.participants.splice(indexOfCurrentUser, 1);
+
             return Response.success(res, chat);
         }
     }
