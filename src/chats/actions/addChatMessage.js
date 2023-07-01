@@ -18,8 +18,15 @@ export default async (req, res) => {
     
     // check if user in participant
     const participantIndex = participants.findIndex(item => item.userId.toString() === req.user.id);
+
     if (participantIndex === -1) {
-        return Response.unauthorized(res, {}, 'User does not have access to this chat');
+        return Response.forbidden(res, {}, 'User does not have access to this chat');
+    }
+
+    if (chat.chatType !== ChatType.single) {
+        if (participants[participantIndex].status && participants[participantIndex].status !== ParticipantStatus.ACTIVE) {
+            return Response.forbidden(res, {}, 'User does not have access to this chat');
+        }
     }
 
     // check if chat type is single and user already left the message

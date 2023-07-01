@@ -63,7 +63,7 @@ export default async (req, res) => {
     emitChatEventToParticipants(req.app?.io, EventType.NEW_CHAT, newchat, chatParticipants);
     
     // remove current user from participant list
-    const isCurrentUser = (item) => item._id?.toString() == req.user.id
+    const isCurrentUser = (item) => item._id?.toString() === req.user.id;
     const indexOfCurrentUser = newchat.participants.findIndex(isCurrentUser);
     newchat.participants.splice(indexOfCurrentUser, 1);
 

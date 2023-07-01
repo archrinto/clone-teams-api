@@ -21,15 +21,6 @@ export default async (req, res) => {
         return Response.badRequest(res, {}, 'Chat not found');
     }
 
-    if (!chat.leftParticipants) {
-        chat.leftParticipants = [];
-    }
-
-    chat.leftParticipants.push({
-        _id: req.user.id,
-        leaveAt: new Date()
-    });
-
     const participantIndex = chat.participants.findIndex(item => item._id.toString() === req.user.id);
 
     if (participantIndex === -1) {
@@ -39,6 +30,7 @@ export default async (req, res) => {
     chat.participantCount -= 1;
     chat.participants[participantIndex].status = ParticipantStatus.LEFT;
     participant.status = ParticipantStatus.LEFT;
+    participant.leaveAt = new Date();
 
     chat.save();
     participant.save();
